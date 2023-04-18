@@ -1,0 +1,25 @@
+{
+  "name": "uzdevid/yii2-dashboard-chat",
+  "description": "Chat of dashboard panel",
+  "type": "yii2-extension",
+  "keywords": [
+    "yii2",
+    "extension"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Ibragimov Diyorbek",
+      "email": "uzdevid@gmail.com"
+    }
+  ],
+  "require": {
+    "yiisoft/yii2": "~2.0.0",
+    "workerman/workerman": "^4.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "uzdevid\\dashboard\\chat\\": ""
+    }
+  }
+}
