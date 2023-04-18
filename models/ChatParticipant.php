@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace uzdevid\dashboard\chat\models;
 
 use uzdevid\dashboard\models\User;
 use Yii;

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace uzdevid\dashboard\chat\models;
 
 use Yii;
 use yii\db\ActiveQuery;

@@ -2,8 +2,8 @@
 
 namespace uzdevid\dashboard\chat\workers;
 
-use app\models\service\ChatService;
-use app\models\service\MessageService;
+use uzdevid\dashboard\chat\models\service\ChatService;
+use uzdevid\dashboard\chat\models\service\MessageService;
 use Exception;
 use Workerman\Connection\TcpConnection;
 use Workerman\Worker;
@@ -30,14 +30,14 @@ class ChatWorker extends Controller {
     /**
      * @param TcpConnection $connection
      */
-    private function onConnect(TcpConnection $connection): void {
+    public function onConnect(TcpConnection $connection): void {
         $this->connections[$connection->id]['connection'] = $connection;
     }
 
     /**
      * @param TcpConnection $connection
      */
-    private function onClose(TcpConnection $connection): void {
+    public function onClose(TcpConnection $connection): void {
         unset($this->connections[$connection->id]);
     }
 
@@ -48,7 +48,7 @@ class ChatWorker extends Controller {
      * @throws InvalidConfigException
      * @throws Exception
      */
-    private function onMessage(TcpConnection $connection, mixed $request): void {
+    public function onMessage(TcpConnection $connection, mixed $request): void {
         $request = json_decode($request, true);
         $this->connections[$connection->id]['user']['id'] = $request['data']['user_id'];
         $this->users[$request['data']['user_id']]['connection_id'] = $connection->id;
