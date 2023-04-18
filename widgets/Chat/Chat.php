@@ -19,10 +19,6 @@ class Chat extends Widget {
      * @throws BadRequestHttpException
      */
     public function init() {
-        if (!class_exists(OffCanvas::class)) {
-            throw new InvalidConfigException(Yii::t('system.error', 'Extension "{name}" not found', ['name' => 'uzdevid/dashboard-offcanvas-page']));
-        }
-
         if (empty($this->id)) {
             throw new BadRequestHttpException(Yii::t('system.error', 'Chat id is empty'));
         }

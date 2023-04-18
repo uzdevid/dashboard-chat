@@ -15,7 +15,8 @@
   ],
   "require": {
     "yiisoft/yii2": "~2.0.0",
-    "workerman/workerman": "^4.1"
+    "workerman/workerman": "^4.1",
+    "uzdevid/dashboard-offcanvas-page": "^1.0.0"
   },
   "autoload": {
     "psr-4": {
