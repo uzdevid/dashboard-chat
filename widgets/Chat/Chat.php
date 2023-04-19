@@ -34,7 +34,7 @@ class Chat extends Widget {
             $chat = ChatModel::findOne($this->id);
 
             if ($chat == null) {
-                throw new NotFoundHttpException(Yii::t('system.error', 'Chat not found'));
+                throw new NotFoundHttpException(Yii::t('system.message', 'Chat not found'));
             }
         }
 
