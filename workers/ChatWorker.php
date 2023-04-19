@@ -2,9 +2,9 @@
 
 namespace uzdevid\dashboard\chat\workers;
 
+use Exception;
 use uzdevid\dashboard\chat\models\service\ChatService;
 use uzdevid\dashboard\chat\models\service\MessageService;
-use Exception;
 use Workerman\Connection\TcpConnection;
 use Workerman\Worker;
 use Yii;
@@ -84,6 +84,11 @@ class ChatWorker extends Controller {
         $userId = $request['data']['user_id'];
         $chatId = $request['data']['chat_id'];
         $text = $request['data']['source'];
+
+        if ($chatId == 0) {
+            $chat = ChatService::createChat($userId, [$userId, $request['data']['companion_user_id']]);
+            $chatId = $chat->id;
+        }
 
         $participant = MessageService::getParticipant($chatId, $userId);
 

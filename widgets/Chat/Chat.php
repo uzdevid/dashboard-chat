@@ -3,6 +3,7 @@
 namespace uzdevid\dashboard\chat\widgets\Chat;
 
 use uzdevid\dashboard\chat\models\Chat as ChatModel;
+use uzdevid\dashboard\chat\models\service\ChatService;
 use uzdevid\dashboard\offcanvaspage\OffCanvas;
 use uzdevid\dashboard\offcanvaspage\OffCanvasOptions;
 use Yii;
@@ -12,17 +13,14 @@ use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 
 class Chat extends Widget {
-    public string|null $id;
+    public string|null $id = null;
+    public int|null $companionId = null;
 
     /**
      * @throws InvalidConfigException
      * @throws BadRequestHttpException
      */
     public function init() {
-        if (empty($this->id)) {
-            throw new BadRequestHttpException(Yii::t('system.error', 'Chat id is empty'));
-        }
-
         parent::init();
     }
 
@@ -30,15 +28,18 @@ class Chat extends Widget {
      * @throws NotFoundHttpException
      */
     public function run() {
-        $chat = ChatModel::findOne($this->id);
+        if ($this->id === null) {
+            $chat = ChatService::createFakeChat($this->companionId);
+        } else {
+            $chat = ChatModel::findOne($this->id);
 
-        if ($chat == null) {
-            throw new NotFoundHttpException(Yii::t('system.error', 'Chat not found'));
+            if ($chat == null) {
+                throw new NotFoundHttpException(Yii::t('system.error', 'Chat not found'));
+            }
         }
 
         if (Yii::$app->request->isAjax) {
             $offcanvas = OffCanvas::options(OffCanvasOptions::SIDE_RIGHT);
-            $view = $this->render('index', compact('chat'));
 
             $companion = null;
             foreach ($chat->chatParticipants as $participant) {
@@ -47,6 +48,8 @@ class Chat extends Widget {
                     break;
                 }
             }
+
+            $view = $this->render('index', compact('chat', 'companion'));
 
             return json_encode([
                 'success' => true,

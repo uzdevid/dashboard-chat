@@ -2,9 +2,9 @@
 
 namespace uzdevid\dashboard\chat\models\service;
 
+use Exception;
 use uzdevid\dashboard\chat\models\ChatMessage;
 use uzdevid\dashboard\chat\models\ChatParticipant;
-use Exception;
 use Yii;
 use yii\base\InvalidConfigException;
 
@@ -18,6 +18,10 @@ class MessageService {
      * @throws Exception
      */
     public static function getMessages($chatId, $userId): array {
+        if ($chatId == 0) {
+            return [];
+        }
+
         $messages = ChatMessage::find()
             ->where(['chat_id' => $chatId])
             ->orderBy(['create_time' => SORT_ASC])

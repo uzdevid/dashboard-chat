@@ -6,8 +6,10 @@ use Exception;
 use uzdevid\dashboard\chat\models\Chat;
 use uzdevid\dashboard\chat\models\ChatMessage;
 use uzdevid\dashboard\chat\models\ChatParticipant;
+use uzdevid\dashboard\models\User;
 use Yii;
 use yii\base\InvalidConfigException;
+use yii\web\NotFoundHttpException;
 
 class ChatService {
     /**
@@ -90,5 +92,66 @@ class ChatService {
             ->select(['user_id'])
             ->where(['chat_id' => $chatId])
             ->column();
+    }
+
+    public static function getChatId(...$userIds) {
+        $chats = Chat::find()
+            ->joinWith('chatParticipants')
+            ->where(['chat_participant.user_id' => $userIds])
+            ->groupBy('chat.id')
+            ->having('COUNT(chat.id) = ' . count($userIds))
+            ->all();
+
+        if (!isset($chats[0])) {
+            throw new NotFoundHttpException(Yii::t('system.error', 'Chat not found'));
+        }
+
+        return $chats[0]->id;
+    }
+
+    public static function createChat(int $createUserId, array $userIds) {
+        $chat = new Chat();
+        $chat->user_id = $createUserId;
+        $chat->create_time = time();
+        $chat->save();
+
+        foreach ($userIds as $userId) {
+            $chatParticipant = new ChatParticipant();
+            $chatParticipant->chat_id = $chat->id;
+            $chatParticipant->user_id = $userId;
+            $chatParticipant->save();
+        }
+
+        return $chat;
+    }
+
+    public static function createFakeChat(int $companionId) {
+        $companion = User::findOne($companionId);
+
+        if ($companion == null) {
+            throw new NotFoundHttpException(Yii::t('system.error', 'Companion not found'));
+        }
+
+        return (object)[
+            'id' => 0,
+            'title' => $companion->fullname,
+            'image' => $companion->profileImage,
+            'chatParticipants' => [
+                (object)[
+                    'user_id' => Yii::$app->user->id,
+                    'user' => (object)[
+                        'id' => Yii::$app->user->id,
+                        'fullname' => Yii::$app->user->identity->fullname,
+                    ]
+                ],
+                (object)[
+                    'user_id' => $companion->id,
+                    'user' => (object)[
+                        'id' => $companion->id,
+                        'fullname' => $companion->fullname,
+                    ]
+                ]
+            ],
+        ];
     }
 }

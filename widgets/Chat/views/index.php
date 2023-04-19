@@ -1,6 +1,7 @@
 <?php
 /***
  * @var \uzdevid\dashboard\chat\models\Chat $chat
+ * @var \uzdevid\dashboard\chat\models\ChatParticipant $companion
  */
 ?>
 
@@ -17,14 +18,14 @@
 </div>
 
 <script>
-    var messagesConnection = new WebSocket(CHAT_WORKER_URL);
+    var messagesConnection = new WebSocket("<?php echo Yii::$app->params['chat']['clientSocketName']; ?>");
 
     messagesConnection.onopen = function (e) {
         let raw = {
             method: 'getMessages',
             data: {
                 chat_id: "<?php echo $chat->id; ?>",
-                user_id: USER_ID
+                user_id: "<?php echo Yii::$app->user->id; ?>"
             }
         }
         messagesConnection.send(JSON.stringify(raw));
@@ -57,6 +58,7 @@
             data: {
                 chat_id: "<?php echo $chat->id; ?>",
                 user_id: "<?php echo Yii::$app->user->id; ?>",
+                companion_user_id: "<?php echo $companion->user_id; ?>",
                 source: $('#chat-textarea').val()
             }
         }
