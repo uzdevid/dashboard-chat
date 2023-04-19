@@ -1,36 +1,38 @@
-const chatsConnection = new WebSocket(CHAT_WORKER_URL);
+function setConnection() {
+    const chatsConnection = new WebSocket(CHAT_WORKER_URL);
 
-chatsConnection.onopen = () => {
-    const raw = {
-        method: 'getChats',
-        data: {
-            user_id: USER_ID
+    chatsConnection.onopen = () => {
+        const raw = {
+            method: 'getChats',
+            data: {
+                user_id: USER_ID
+            }
+        };
+        chatsConnection.send(JSON.stringify(raw));
+    };
+
+    chatsConnection.onerror = () => {
+        toaster.error('Chat connection error', 'Error');
+    };
+
+    chatsConnection.onmessage = event => {
+        const data = JSON.parse(event.data);
+
+        if (data.method === 'getChats') {
+            const chats = data.chats;
+            let unreadMessages = 0;
+
+            $('#chats').empty();
+
+            for (const chat of chats) {
+                buildChat(chat);
+                unreadMessages += chat.unread;
+            }
+
+            $('#unread-messages').text(unreadMessages || '');
         }
     };
-    chatsConnection.send(JSON.stringify(raw));
-};
-
-chatsConnection.onerror = () => {
-    toaster.error('Chat connection error', 'Error');
-};
-
-chatsConnection.onmessage = event => {
-    const data = JSON.parse(event.data);
-
-    if (data.method === 'getChats') {
-        const chats = data.chats;
-        let unreadMessages = 0;
-
-        $('#chats').empty();
-
-        for (const chat of chats) {
-            buildChat(chat);
-            unreadMessages += chat.unread;
-        }
-
-        $('#unread-messages').text(unreadMessages || '');
-    }
-};
+}
 
 function buildChat(chat) {
     const template = `
@@ -54,3 +56,5 @@ function buildChat(chat) {
 
     $('#chats').append(template);
 }
+
+setConnection();
