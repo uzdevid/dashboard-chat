@@ -13,6 +13,12 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 class ChatController extends BaseController {
+    public function __construct($id, $module, $config = []) {
+        parent::__construct($id, $module, $config);
+
+        $this->viewPath = '@vendor/uzdevid/yii2-dashboard-chat/views/chat';
+    }
+
     public function behaviors(): array {
         $behaviors = parent::behaviors();
         $behaviors['access'] = [
