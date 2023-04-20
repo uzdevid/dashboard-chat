@@ -2,6 +2,7 @@
 
 namespace uzdevid\dashboard\chat\models;
 
+use uzdevid\dashboard\chat\models\service\MessageService;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -98,5 +99,13 @@ class ChatMessage extends ActiveRecord {
      */
     public function getParticipant(): ActiveQuery {
         return $this->hasOne(ChatParticipant::class, ['id' => 'participant_id']);
+    }
+
+    public function afterSave($insert, $changedAttributes): void {
+        parent::afterSave($insert, $changedAttributes);
+
+        if ($insert) {
+            MessageService::notify($this);
+        }
     }
 }

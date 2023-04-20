@@ -4,8 +4,8 @@ namespace uzdevid\dashboard\chat\widgets\Chat;
 
 use uzdevid\dashboard\chat\models\Chat as ChatModel;
 use uzdevid\dashboard\chat\models\service\ChatService;
-use uzdevid\dashboard\offcanvaspage\OffCanvas;
-use uzdevid\dashboard\offcanvaspage\OffCanvasOptions;
+use uzdevid\dashboard\widgets\OffCanvasPage\OffCanvasPage;
+use uzdevid\dashboard\widgets\OffCanvasPage\OffCanvasPageOptions;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\Widget;
@@ -39,7 +39,7 @@ class Chat extends Widget {
         }
 
         if (Yii::$app->request->isAjax) {
-            $offcanvas = OffCanvas::options(OffCanvasOptions::SIDE_RIGHT);
+            $offcanvas = OffCanvasPage::options(OffCanvasPageOptions::SIDE_RIGHT);
 
             $companion = null;
             foreach ($chat->chatParticipants as $participant) {
@@ -55,7 +55,7 @@ class Chat extends Widget {
                 'success' => true,
                 'offcanvas' => $offcanvas,
                 'body' => [
-                    'title' => OffCanvas::title($companion->user->fullname, '<i class="bi bi-chat-right-text"></i>'),
+                    'title' => OffCanvasPage::title($companion->user->fullname, '<i class="bi bi-chat-right-text"></i>'),
                     'view' => $view
                 ]
             ], JSON_UNESCAPED_UNICODE);

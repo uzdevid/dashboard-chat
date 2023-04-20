@@ -5,6 +5,10 @@ namespace uzdevid\dashboard\chat\models\service;
 use Exception;
 use uzdevid\dashboard\chat\models\ChatMessage;
 use uzdevid\dashboard\chat\models\ChatParticipant;
+use uzdevid\dashboard\notification\models\Notification;
+use uzdevid\dashboard\notification\models\NotificationType;
+use uzdevid\dashboard\notification\models\services\NotificationService;
+use uzdevid\dashboard\notification\models\services\NotificationTypeService;
 use Yii;
 use yii\base\InvalidConfigException;
 
@@ -127,5 +131,24 @@ class MessageService {
         }
 
         return $message;
+    }
+
+    public static function notify(ChatMessage $message): void {
+        if (!class_exists(Notification::class)) {
+            return;
+        }
+
+        $type = NotificationType::find()->where(['name' => NotificationTypeService::NEW_MESSAGE])->one();
+        if ($type == null) {
+            return;
+        }
+
+        foreach ($message->chat->chatParticipants as $participant) {
+            if ($participant->user_id == $message->participant->user_id) {
+                continue;
+            }
+
+            NotificationService::createNotification($type, $participant->user_id, $message);
+        }
     }
 }
