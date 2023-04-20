@@ -2,6 +2,8 @@
 
 ## Migration
 
+config/console.php
+
 ```php
 'controllerMap' => [
     'migrate' => [
@@ -11,5 +13,22 @@
             '@vendor/uzdevid/dashboard-chat/migrations'
         ],
     ],
+],
+```
+
+config/web.php
+
+```php
+'modules' => [
+    'system' => [
+        'class' => uzdevid\dashboard\modules\system\Module::class,
+        'modules' => [
+            'api' => uzdevid\dashboard\modules\system\modules\api\Module::class,
+        ],
+        'controllerMap' => [
+            'chat' => \uzdevid\dashboard\chat\controllers\ChatController::class
+        ]
+    ],
+    'tamaddun' => app\modules\tamaddun\Module::class,
 ],
 ```
