@@ -73,7 +73,7 @@ class ChatService {
             ->one();
 
         if ($companion == null) {
-            throw new Exception(Yii::t('system.message', 'Companion not found'));
+            throw new Exception(Yii::t('system.error', 'Companion not found'));
         }
 
         return $companion;
@@ -103,7 +103,7 @@ class ChatService {
             ->all();
 
         if (!isset($chats[0])) {
-            throw new NotFoundHttpException(Yii::t('system.message', 'Chat not found'));
+            throw new NotFoundHttpException(Yii::t('system.error', 'Chat not found'));
         }
 
         return $chats[0]->id;
@@ -129,7 +129,7 @@ class ChatService {
         $companion = User::findOne($companionId);
 
         if ($companion == null) {
-            throw new NotFoundHttpException(Yii::t('system.message', 'Companion not found'));
+            throw new NotFoundHttpException(Yii::t('system.error', 'Companion not found'));
         }
 
         return (object)[

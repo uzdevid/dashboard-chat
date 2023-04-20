@@ -4,8 +4,8 @@ namespace uzdevid\dashboard\chat\widgets\Chat;
 
 use uzdevid\dashboard\chat\models\Chat as ChatModel;
 use uzdevid\dashboard\chat\models\service\ChatService;
-use uzdevid\dashboard\widgets\OffCanvasPage\OffCanvasPage;
-use uzdevid\dashboard\widgets\OffCanvasPage\OffCanvasPageOptions;
+use uzdevid\dashboard\offcanvaspage\OffCanvas;
+use uzdevid\dashboard\offcanvaspage\OffCanvasOptions;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\Widget;
@@ -34,12 +34,12 @@ class Chat extends Widget {
             $chat = ChatModel::findOne($this->id);
 
             if ($chat == null) {
-                throw new NotFoundHttpException(Yii::t('system.message', 'Chat not found'));
+                throw new NotFoundHttpException(Yii::t('system.error', 'Chat not found'));
             }
         }
 
         if (Yii::$app->request->isAjax) {
-            $offcanvas = OffCanvasPage::options(OffCanvasPageOptions::SIDE_RIGHT);
+            $offcanvas = OffCanvas::options(OffCanvasOptions::SIDE_RIGHT);
 
             $companion = null;
             foreach ($chat->chatParticipants as $participant) {
@@ -55,7 +55,7 @@ class Chat extends Widget {
                 'success' => true,
                 'offcanvas' => $offcanvas,
                 'body' => [
-                    'title' => OffCanvasPage::title($companion->user->fullname, '<i class="bi bi-chat-right-text"></i>'),
+                    'title' => OffCanvas::title($companion->user->fullname, '<i class="bi bi-chat-right-text"></i>'),
                     'view' => $view
                 ]
             ], JSON_UNESCAPED_UNICODE);

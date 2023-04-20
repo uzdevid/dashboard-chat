@@ -16,19 +16,16 @@ config/console.php
 ],
 ```
 
-config/web.php
+config/console.php
 
 ```php
-'modules' => [
-    'system' => [
-        'class' => uzdevid\dashboard\modules\system\Module::class,
-        'modules' => [
-            'api' => uzdevid\dashboard\modules\system\modules\api\Module::class,
-        ],
-        'controllerMap' => [
-            'chat' => \uzdevid\dashboard\chat\controllers\ChatController::class
-        ]
-    ],
-    'tamaddun' => app\modules\tamaddun\Module::class,
+'controllerMap' => [
+    'chat' => uzdevid\dashboard\chat\commands\ChatController::class,
 ],
+```
+
+and run command
+
+```bash
+yii chat/run
 ```

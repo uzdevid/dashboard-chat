@@ -1,6 +1,6 @@
 <?php
 
-namespace uzdevid\dashboard\chat\workers;
+namespace uzdevid\dashboard\chat\commands;
 
 use Exception;
 use uzdevid\dashboard\chat\models\service\ChatService;
@@ -11,7 +11,7 @@ use Yii;
 use yii\base\InvalidConfigException;
 use yii\console\Controller;
 
-class ChatWorker extends Controller {
+class ChatController extends Controller {
     private array $connections = [];
     private array $users = [];
 
