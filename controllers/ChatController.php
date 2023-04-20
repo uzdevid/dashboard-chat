@@ -4,7 +4,7 @@ namespace uzdevid\dashboard\chat\controllers;
 
 use uzdevid\dashboard\chat\models\service\ChatService;
 use uzdevid\dashboard\chat\widgets\Chat\Chat;
-use uzdevid\dashboard\components\BaseController;
+use uzdevid\dashboard\base\web\Controller;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -12,7 +12,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
-class ChatController extends BaseController {
+class ChatController extends Controller {
     public function __construct($id, $module, $config = []) {
         parent::__construct($id, $module, $config);
 
